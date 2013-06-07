@@ -5,8 +5,11 @@ require 'date'
 
 class Twitter_searcher
 
+	attr_accessor :goback
+
 	def initialize
 		@multitweets = []
+		@goback = 0
 	end
 
 	Twitter.configure do |config|
@@ -16,21 +19,26 @@ class Twitter_searcher
 	  config.oauth_token_secret = "Qu58hiOCyRo0tZGJxgiaYEazqXadKKZW8nbkOqs0"
 	end
 
-	def twit_search(fromuser, countback)
-		Twitter.search("from:#{fromuser}", :count => 3, :until => prev_day(countback), :result_type => "recent").results.map do |status|
+	def twit_search(fromuser)
+		@goback += 1 if @goback < 4
+		@multitweets = []
+		Twitter.search("from:#{fromuser}", :count => 1, :until => prev_day, :result_type => "recent").results.map do |status|
 		  result = "#{status.from_user}: #{status.text}"
-		  @multitweets << result.split("\n")[0..-2].join("\n")
-		  @multitweets << "=================================\n"
+		  @multitweets << result
 		end
 		@multitweets.join
 	end
 
-	def prev_day(countback)
+	def prev_day
 		now = Date.today
-		now -= countback
+		now -= @goback
 		puts now
+		now.to_s
 	end
 end
 
 # t = Twitter_searcher.new
-# t.twit_search("JonyFuckingIve", t.prev_day)
+# while true
+# 	t.twit_search("robdelaney")
+# 	sleep(2)
+# end

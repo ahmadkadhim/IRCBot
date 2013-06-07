@@ -1,24 +1,24 @@
 #ircbotftw
 
 class Twitterspambot
-	attr_accessor :irc_server, :countback
+	attr_accessor :irc_server
 
 	require "socket"
 
 	def initialize
 		@channel = "#bitmaker"
 		@greeting_prefix = "privmsg #bitmaker :"
-		@trigger = "gimme some jony"
-		@countback = 0
+		@trigger = "bloodsucking vampires"
+		#@countback = 0
 		@irc_server = connect_to_server
 	end
 
 	def connect_to_server
 		server = "chat.freenode.net"
 		port = "6667"
-		nick = "JonyBot"
+		nick = "GoldmanSachsBot"
 		irc_server = TCPSocket.open(server, port)
-		irc_server.puts "USER jonyfuckingivebot 0 * JonyFuckingIveBot"
+		irc_server.puts "USER gselevatorbot 0 * GSElevatorBot"
 		irc_server.puts "NICK #{nick}"
 		irc_server.puts "JOIN #{@channel}"
 		irc_server
@@ -29,7 +29,7 @@ class Twitterspambot
 
 	end
 
-	def jony?(msg)
+	def trigger?(msg)
 		msg.include?(@trigger)
 	end
 
